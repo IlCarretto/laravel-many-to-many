@@ -77,7 +77,8 @@ class ProjectController extends Controller
     public function edit(Project $project)
     {
         $types = Type::all();
-        return view('admin.projects.edit', compact('project', 'types'));
+        $technologies = Technology::all();
+        return view('admin.projects.edit', compact('project', 'types', 'technologies'));
     }
 
     /**
@@ -99,6 +100,12 @@ class ProjectController extends Controller
             $form_data['image'] = $path;
         }
         $project->update($form_data);
+
+        if ($request->has('technologies')) {
+            $project->technologies()->sync($request->technology);
+        } else {
+            $project->technologies()->detach();
+        }
         return redirect()->route('admin.projects.index')->with('message', "Il progetto $project->title è stato aggiornato!");
     }
 
@@ -110,6 +117,7 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        $project->technologies()->detach();
         if ($project->image) {
             Storage::delete($project->image);
         }

@@ -56,6 +56,16 @@
                             <p class=mt-3>No images found yet</p>
                         @endif
                     </div>
+                    <div class="checkbox-container mt-3">
+                        @foreach ($technologies as $technology)
+                            <div class="form-check">
+                                <input type="checkbox" id="tag:{{ $technology->id }}" name="technologies[]"
+                                    class="form-check-input" value="{{ $technology->id }}" @checked($project->technologies->contains($technology))>
+                                <label for="tag:{{ $technology->id }}"
+                                    class="form-check-label">{{ $technology->name }}</label>
+                            </div>
+                        @endforeach
+                    </div>
                     <div class="text-container mt-3">
                         <label for="proj_description">Descrizione del progetto</label>
                         <textarea name="proj_description" id="proj_description" rows="10"
